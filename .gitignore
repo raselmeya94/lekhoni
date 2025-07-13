@@ -1,0 +1,10 @@
+/lekhoni-backend/env
+/lekhoni-backend/__pycache__/
+/lekhoni-backend/.vscode/
+/lekhoni-backend/.idea/
+/lekhoni-backend/.DS_Store
+/lekhoni-backend/*.pyc
+/lekhoni-backend/*.pyo
+/lekhoni-backend/*.pyd
+.DS_Store
+/lekhoni-frontend/node_modules/
