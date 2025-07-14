@@ -58,7 +58,14 @@
 // export default LabelStats;
 // src/components/LabelStats.js
 import React from 'react';
-
+// 🔧 Helper function to format large numbers
+function formatNumber(num) {
+  if (num >= 1000) {
+    const formatted = (num / 1000).toFixed(num % 1000 === 0 ? 0 : 1);
+    return `${formatted}K`;
+  }
+  return num.toString();
+}
 function LabelStats({ stats }) {
   const entries = Object.entries(stats);
 
@@ -68,22 +75,20 @@ function LabelStats({ stats }) {
   const total = entries.reduce((sum, [, count]) => sum + count, 0);
 
   return (
-    <div className="label-stats-container">
-      {/* Header with total count in right corner */}
+    <>
       <div className="label-stats-header">
         <h4>📊 Label-wise Contributions</h4>
-        <div className="total-count">🧮 Total: {total}</div>
+        <div className="total-count">🧮 Total: {formatNumber(total)}</div>
       </div>
-
       <div className="label-cards">
         {entries.map(([label, count]) => (
           <div key={label} className="label-card">
             <span className="label-char">{label}</span>
-            <span className="label-count">{count}</span>
+            <span className="label-count">{formatNumber(count)}</span>
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }
 

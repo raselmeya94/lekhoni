@@ -136,7 +136,7 @@ function LabelButtons({ onSelect }) {
       </div>
 
       {/* Input Field */}
-      <div style={{ marginTop: '0.5rem' }}>
+      <div style={{ marginTop: '1.5rem' }}>
         <input
           type="text"
           placeholder="অথবা নিজে লিখুন যেমন: ক্র"

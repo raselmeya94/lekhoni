@@ -92,7 +92,7 @@ function Navbar({ currentTab, setCurrentTab }) {
     <nav className="navbar">
       <div className="navbar-brand">
         <img
-          src={`${process.env.PUBLIC_URL}/logo.png`}
+          src={`${process.env.PUBLIC_URL}/logo_pen.png`}
           alt="Lekhoni Logo"
           style={{
             height: '32px',
@@ -116,7 +116,7 @@ function Navbar({ currentTab, setCurrentTab }) {
         >
           Research Purpose
         </li>
-        <li>
+        {/* <li>
           <a
             href="http://localhost:8000/download-dataset"
             className="download-button"
@@ -132,7 +132,7 @@ function Navbar({ currentTab, setCurrentTab }) {
           >
             📥 Download Dataset
           </a>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

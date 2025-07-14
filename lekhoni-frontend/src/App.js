@@ -108,7 +108,7 @@ function App() {
   const [selectedLabel, setSelectedLabel] = useState('');
   const [submissionCount, setSubmissionCount] = useState(0);
   const [labelStats, setLabelStats] = useState({});
-  const [currentTab, setCurrentTab] = useState('home'); // 🧭 tab manager
+  const [currentTab, setCurrentTab] = useState('home'); 
 
   // Update document title on tab change
   useEffect(() => {
@@ -172,11 +172,10 @@ function App() {
   return (
     <div className="app">
       <Navbar currentTab={currentTab} setCurrentTab={setCurrentTab} />
-
-      {/* 👇 Wrap all return content in a fragment */}
       <>
         {currentTab === 'home' && (
           <div className="app-container">
+            
             <div className="left-panel">
               <Canvas onSave={handleSave} />
             </div>

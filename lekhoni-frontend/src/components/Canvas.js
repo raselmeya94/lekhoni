@@ -97,13 +97,13 @@ function Canvas({ onSave }) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = 300;
-    canvas.height = 300;
+    canvas.width = 400;
+    canvas.height = 400;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#fff';  // White background
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = '#000';  // Black pen
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 20;
     ctx.lineCap = 'round';
     setContext(ctx);
   }, []);
@@ -149,7 +149,7 @@ function Canvas({ onSave }) {
   return (
     <div>
       {/* Canvas heading */}
-      <h3 style={{ marginBottom: '0.5rem', color: '#2c3e50' }}>ড্রইং এরিয়া</h3>
+      <h3 style={{ marginBottom: '0.5rem', color: '#2c3e50' }}>✏️ড্রইং এরিয়া</h3>
 
       <canvas
         ref={canvasRef}

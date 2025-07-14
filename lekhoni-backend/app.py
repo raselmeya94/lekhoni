@@ -1,11 +1,9 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, send_file,request, abort
 from flask_cors import CORS
 import pandas as pd
 from datetime import datetime
 # from  image_preprocessing import preprocess_image
-from flask import Flask, send_file,request, send_file, abort
-import os
 import shutil
 import tempfile
 import zipfile
@@ -61,15 +59,15 @@ def upload():
         # Full file path
         filepath = os.path.join(label_path, filename)
         
-        # label_path_processed = os.path.join(processed_dir, label)
-        # os.makedirs(label_path_processed, exist_ok=True)  # Ensure folder exists
+        label_path_processed = os.path.join(processed_dir, label)
+        os.makedirs(label_path_processed, exist_ok=True)  # Ensure folder exists
 
-        # # Full file path
-        # filepath_processed = os.path.join(label_path_processed, filename)
+        # Full file path
+        filepath_processed = os.path.join(label_path_processed, filename)
 
         # Save the image
         image.save(filepath)
-        # preprocess_image(filepath, filepath_processed, final_size=(64, 64))
+        preprocess_image(filepath, filepath_processed, final_size=(64, 64))
         # Save to CSV
         new_row = {
             'filename': filename,
@@ -105,77 +103,70 @@ def stats():
     return jsonify(counts)
 
 
-@app.route('/download-dataset')
-def download_dataset():
-    image_folder = 'uploads'
-    csv_file = 'labels.csv'
-    chunk_size = 10 # optional
 
-    # Read CSV
-    if not os.path.exists(csv_file):
-        return abort(404, description="CSV not found.")
+# @app.route('/download-dataset')
+# def download_dataset():
+#     image_folder = 'uploads'
+#     csv_file = 'labels.csv'
+#     chunk_size = 2
 
-    df = pd.read_csv(csv_file)
-    total_samples = len(df)
+#     if not os.path.exists(csv_file):
+#         return abort(404, description="CSV file not found.")
 
-    # Get optional chunk number
-    chunk_param = request.args.get('chunk', None)
-    
-    if chunk_param:
-        try:
-            chunk = int(chunk_param)
-        except ValueError:
-            return abort(400, description="Invalid chunk number.")
-        
-        total_chunks = (total_samples + chunk_size - 1) // chunk_size
-        if chunk < 1 or chunk > total_chunks:
-            return abort(400, description=f"Invalid chunk number. Total chunks: {total_chunks}")
-        
-        # Get specific slice
-        start = (chunk - 1) * chunk_size
-        end = min(start + chunk_size, total_samples)
-        df_chunk = df.iloc[start:end]
-        zip_name = f'lekhoni_dataset_chunk_{chunk}.zip'
-    else:
-        # Full dataset
-        df_chunk = df
-        zip_name = 'lekhoni_dataset.zip'
+#     df = pd.read_csv(csv_file)
+#     total_samples = len(df)
+#     total_chunks = (total_samples + chunk_size - 1) // chunk_size
 
-    # Create temporary directory
-    with tempfile.TemporaryDirectory() as temp_dir:
-        dataset_dir = os.path.join(temp_dir, 'lekhoni_dataset')
-        images_dir = os.path.join(dataset_dir, 'images')
-        os.makedirs(images_dir, exist_ok=True)
+#     try:
+#         chunk_number = int(request.args.get('chunk', 1))
+#     except (TypeError, ValueError):
+#         return abort(400, description="Invalid chunk number.")
 
-        # Copy only required images
-        missing = 0
-        for img_name in df_chunk['filename']:
-            src = os.path.join(image_folder, img_name)
-            dst = os.path.join(images_dir, img_name)
-            if os.path.exists(src):
-                shutil.copy(src, dst)
-            else:
-                missing += 1
+#     if chunk_number < 1 or chunk_number > total_chunks:
+#         return abort(404, description="Chunk number out of range.")
 
-        # Save filtered CSV
-        df_chunk.to_csv(os.path.join(dataset_dir, 'annotations.csv'), index=False)
+#     start = (chunk_number - 1) * chunk_size
+#     end = min(start + chunk_size, total_samples)
+#     df_chunk = df.iloc[start:end]
 
-        # Create ZIP
-        zip_path = os.path.join(temp_dir, zip_name)
-        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            for root, _, files in os.walk(dataset_dir):
-                for file in files:
-                    abs_path = os.path.join(root, file)
-                    rel_path = os.path.relpath(abs_path, dataset_dir)
-                    zipf.write(abs_path, rel_path)
+#     with tempfile.TemporaryDirectory() as temp_dir:
+#         chunk_dir = os.path.join(temp_dir, f'chunk_{chunk_number}')
+#         os.makedirs(chunk_dir, exist_ok=True)
 
-        print(f"Delivered: {zip_name}, entries: {len(df_chunk)}, missing images: {missing}")
-        return send_file(
-            zip_path,
-            as_attachment=True,
-            download_name=zip_name,
-            mimetype='application/zip'
-        )
+#         images_dir = os.path.join(chunk_dir, 'images')
+#         os.makedirs(images_dir, exist_ok=True)
+
+#         missing = 0
+#         for _, row in df_chunk.iterrows():
+#             img_rel_path = row['file_path']
+#             img_name = row['filename']
+
+#             src = img_rel_path
+#             dst = os.path.join(images_dir, img_name)
+
+#             if os.path.exists(src):
+#                 shutil.copy(src, dst)
+#             else:
+#                 missing += 1
+
+#         df_chunk.to_csv(os.path.join(chunk_dir, 'annotations.csv'), index=False)
+
+#         zip_path = os.path.join(temp_dir, f'dataset_{chunk_number}.zip')
+#         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+#             for root, _, files in os.walk(chunk_dir):
+#                 for file in files:
+#                     abs_path = os.path.join(root, file)
+#                     rel_path = os.path.relpath(abs_path, chunk_dir)
+#                     zipf.write(abs_path, rel_path)
+
+#         print(f"Chunk {chunk_number}: {end - start} samples, missing: {missing}")
+
+#         return send_file(
+#             zip_path,
+#             as_attachment=True,
+#             download_name=f'lekhoni_dataset{chunk_number}.zip',
+#             mimetype='application/zip'
+#         )
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

@@ -9,7 +9,7 @@ function ResearchSection() {
         position: 'relative', // টগল বাটনের জন্য
         textAlign: 'left',
         maxWidth: '100%',
-        margin: '0 auto',
+        margin: '9px auto',
         lineHeight: '1.6',
         fontSize: '1.1rem',
         padding: '1.5rem',
