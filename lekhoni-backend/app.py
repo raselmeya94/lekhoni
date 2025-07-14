@@ -59,15 +59,15 @@ def upload():
         # Full file path
         filepath = os.path.join(label_path, filename)
         
-        label_path_processed = os.path.join(processed_dir, label)
-        os.makedirs(label_path_processed, exist_ok=True)  # Ensure folder exists
+        # label_path_processed = os.path.join(processed_dir, label)
+        # os.makedirs(label_path_processed, exist_ok=True)  # Ensure folder exists
 
-        # Full file path
-        filepath_processed = os.path.join(label_path_processed, filename)
+        # # Full file path
+        # filepath_processed = os.path.join(label_path_processed, filename)
 
         # Save the image
         image.save(filepath)
-        preprocess_image(filepath, filepath_processed, final_size=(64, 64))
+        # preprocess_image(filepath, filepath_processed, final_size=(64, 64))
         # Save to CSV
         new_row = {
             'filename': filename,
