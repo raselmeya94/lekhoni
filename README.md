@@ -57,7 +57,7 @@ Despite Bangla’s vast usage, existing OCR systems struggle with handwritten te
 
 It's simple to help:
 
-1. Visit [lekhoni.com](https://lekhoni.com)
+1. Visit [lekhoni.com]()
 2. Draw any Bangla character using your mouse or touch device
 3. Select the correct label and submit
 4. Repeat and help us reach our goal!
@@ -112,13 +112,6 @@ Special thanks to every contributor, educator, student, and language lover who i
 
 > “Your one handwritten character can help millions.”
 
----
-
-## 📫 Contact & Community
-
-- Email: `team@lekhoni.com`
-- Join our [Facebook Group](https://facebook.com/groups/lekhoni)
-- Contribute via GitHub (coming soon)
 
 ---
 
